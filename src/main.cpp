@@ -1,4 +1,5 @@
 #include <array>
+#include <algorithm>
 #include <zephyr/logging/log.h>
 
 LOG_MODULE_REGISTER(main, LOG_LEVEL_INF);
@@ -7,22 +8,33 @@ LOG_MODULE_REGISTER(main, LOG_LEVEL_INF);
 
 int main(void)
 {
-  // Page 6.  A comparison of C loop with C++ range-based loop.
+  // Page 7.  Example of C++ lamda function to sort numbers below 10.
 
   // C.
-  int buffer1[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+  int arrayA [] = { 1, 2, 30, 4, 50, 60, 7, 8, 90, 100 };
+  int arrayB [N];
 
-  for (int i = 0; i < N; i++)
+  int idx { 0 };
+  for (int i = 0; i < (sizeof(arrayA) / sizeof(int)); i++)
   {
-    LOG_INF("%d ", buffer1[i]);
+    if (arrayA[i] < 10)
+    {
+      arrayB[idx++] = arrayA[i];
+      LOG_INF("%d ", arrayB[idx - 1]);
+    }
   }
 
   //C++
-  std::array<int, 10> buffer2 { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+  std::array<int, 10> arrayC { 1, 2, 30, 4, 50, 60, 7, 8, 90, 100 };
+  std::array<int, 10> arrayD { };
 
-  for (const auto& element : buffer2)
+  auto lessThan10 = [](auto x ) -> bool { return x < 10; };
+  
+  std::copy_if(std::begin(arrayC), std::end(arrayC), std::begin(arrayD), lessThan10);
+
+  for (const auto& element : arrayD)
   {
-    LOG_INF("%d ", element);
+    if ((element > 0) && (element < 10)) { LOG_INF("%d ", element); }
   }
   
 }
